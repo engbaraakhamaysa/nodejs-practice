@@ -4,6 +4,7 @@
 
 // 1) Calling the Express library
 // - express = A framework built on top of Node.js to facilitate building servers and APIs
+const { render } = require("ejs");
 const express = require("express");
 
 // 2) Create a new Express application
@@ -94,6 +95,37 @@ app.get("/sayHello", (req, res) => {
 app.get("/sayHelloQuery", (req, res) => {
   console.log(req.query);
   res.send(`Age = ${req.query.age}`);
+});
+
+// ---------------------------------------------
+// ٌResponse JSON
+// ---------------------------------------------
+app.get("/sendJson", (req, res) => {
+  res.json({
+    name: req.body.name,
+    age: req.query.age,
+    cores: "Reive viedo 1:12",
+  });
+});
+
+app.get("/html", (req, res) => {
+  res.send("<h1> Hello Word </h1>");
+});
+
+app.get("/htmlPage", (req, res) => {
+  //   res.send(__dirname+"./views/numbers.html");//path file
+  res.sendFile(__dirname + "/views/numbers.html");
+});
+
+app.get("/ejsPage", (req, res) => {
+  let number = "";
+  for (let i = 0; i <= 100; i++) {
+    number += i + "-";
+  }
+  res.render("Numbers.ejs", {
+    name: "baraa,",
+    number: number,
+  }); //he serch forder name views this name is iimportant
 });
 
 // ---------------------------------------------
