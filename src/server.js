@@ -6,6 +6,7 @@ const Article = require("./models/Article");
 
 const dotenv = require("dotenv");
 dotenv.config();
+const path = require("path");
 
 // -----------------------------------------------------
 //  Setting up Express and activating JSON Middleware
@@ -33,6 +34,10 @@ mongoose
 // - app = The variable we will use to define Routes , Middleware & Handle requests and responses.
 const app = express();
 
+// Middleware لضبط مكان ملفات views واستخدام EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views")); // مجلد views داخل src
+//====================================================================================================================================
 // 3) Activate Middleware to convert JSON
 // - express.json() = A middleware function that automatically converts any JSON data in the request body
 // into a JavaScript object for access via req.body
@@ -155,7 +160,7 @@ app.get("/ejsPage", (req, res) => {
   }); //he serch forder name views this name is iimportant
 });
 
-// ============= ARTICLES ENDPOINTS =============
+// ============= ARTICLES ENDPOINTS ============================================================================================
 
 app.post("/articles", async (req, res) => {
   //now Obj from Article() model
@@ -210,6 +215,14 @@ app.delete("/articles/:id", async (req, res) => {
     return res.send("error");
   }
 });
+
+app.get("/showArticles", async (req, res) => {
+  const articles = await Article.find();
+  res.render("Articles.ejs", {
+    allArticles: articles,
+  });
+});
+
 // ---------------------------------------------
 // Running the server (Listening for Requests)
 // ---------------------------------------------
