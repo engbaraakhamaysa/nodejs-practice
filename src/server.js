@@ -1,4 +1,11 @@
 // -----------------------------------------------------
+//  Load Environment Variables
+// -----------------------------------------------------
+
+const dotenv = require("dotenv");
+dotenv.config();
+
+// -----------------------------------------------------
 //  Setting up Express and activating JSON Middleware
 // -----------------------------------------------------
 
@@ -6,6 +13,19 @@
 // - express = A framework built on top of Node.js to facilitate building servers and APIs
 const { render } = require("ejs");
 const express = require("express");
+
+// -----------------------------------------------------
+//  Connect to MongoDB
+// -----------------------------------------------------
+const mongoose = require("mongoose");
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("COONECTED SUCCESSFULLY");
+  })
+  .catch((error) => {
+    console.log("Error With Connection With The DB", error);
+  });
 
 // 2) Create a new Express application
 // - app = The variable we will use to define Routes , Middleware & Handle requests and responses.
@@ -98,8 +118,10 @@ app.get("/sayHelloQuery", (req, res) => {
 });
 
 // ---------------------------------------------
-// ٌResponse JSON
+// ٌResponse JSON & ejs & HtmL
 // ---------------------------------------------
+
+//1- Response JSON
 app.get("/sendJson", (req, res) => {
   res.json({
     name: req.body.name,
@@ -108,15 +130,18 @@ app.get("/sendJson", (req, res) => {
   });
 });
 
+//2-Respnse HTML
 app.get("/html", (req, res) => {
   res.send("<h1> Hello Word </h1>");
 });
 
+//3-Response HTML Page
 app.get("/htmlPage", (req, res) => {
   //   res.send(__dirname+"./views/numbers.html");//path file
   res.sendFile(__dirname + "/views/numbers.html");
 });
 
+//4-Response ejs Page
 app.get("/ejsPage", (req, res) => {
   let number = "";
   for (let i = 0; i <= 100; i++) {
@@ -134,6 +159,6 @@ app.get("/ejsPage", (req, res) => {
 
 //// app.listen(port, callback)
 //listen the request from the Browser or any client the number port the server is 3000
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("I Am Listenig In Port 3000");
 });
