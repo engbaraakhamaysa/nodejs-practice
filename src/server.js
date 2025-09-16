@@ -1,3 +1,5 @@
+const Article = require("./models/Article");
+
 // -----------------------------------------------------
 //  Load Environment Variables
 // -----------------------------------------------------
@@ -153,6 +155,61 @@ app.get("/ejsPage", (req, res) => {
   }); //he serch forder name views this name is iimportant
 });
 
+// ============= ARTICLES ENDPOINTS =============
+
+app.post("/articles", async (req, res) => {
+  //now Obj from Article() model
+  const newAritcles = new Article();
+  newAritcles.title = "My First Articles";
+  newAritcles.body = "This Is The Body";
+  newAritcles.numberOfLikes = 100;
+  //save is  async functin
+  await newAritcles.save();
+
+  res.send("The new Article Has Been Stored");
+});
+
+app.post("/createArticles", async (req, res) => {
+  //now Obj from Article() model
+  const newAritcles = new Article();
+  newAritcles.title = req.body.title;
+  newAritcles.body = req.body.body;
+  newAritcles.numberOfLikes = req.body.like;
+  //save is  async functin
+  await newAritcles.save();
+
+  res.json(newAritcles);
+});
+
+app.get("/articles", async (req, res) => {
+  const articles = await Article.find();
+  console.log("The Articles are", articles);
+  res.json(articles);
+});
+
+app.get("/articles/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const articles = await Article.findById(id);
+    res.json(articles);
+    return;
+  } catch (error) {
+    console.log("error While reading article of id", id);
+    return res.send("error");
+  }
+});
+
+app.delete("/articles/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const articles = await Article.findByIdAndDelete(id);
+    res.json(articles);
+    return;
+  } catch (error) {
+    console.log("error While reading article of id", id);
+    return res.send("error");
+  }
+});
 // ---------------------------------------------
 // Running the server (Listening for Requests)
 // ---------------------------------------------
